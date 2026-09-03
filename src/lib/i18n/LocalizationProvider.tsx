@@ -18,7 +18,7 @@ const LocalizationContext = createContext<LocalizationValue | undefined>(undefin
 const LANGUAGE_KEY = "blocks-app:language";
 // One module per screen would keep the initial payload small, but this
 // starter only ships Profile -- add module names here as you add pages.
-const MODULES = ["common"];
+const MODULES = ["common", "hackdesk"];
 
 function normalizeLanguage(raw: Record<string, unknown>): LocalizationLanguage {
   const code = raw.languageCode ?? raw.code ?? raw.culture ?? "en";

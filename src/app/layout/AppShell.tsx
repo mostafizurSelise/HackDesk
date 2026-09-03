@@ -5,6 +5,7 @@ import { LanguageSwitcher } from "./LanguageSwitcher";
 import { navItems } from "./navItems";
 import { NotificationsMenu } from "./NotificationsMenu";
 import { UserMenu } from "./UserMenu";
+import { useCurrentUser } from "../../features/profile/useCurrentUser";
 import { useT } from "../../lib/i18n/LocalizationProvider";
 
 const COLLAPSED_KEY = "blocks-app:sidebar-collapsed";
@@ -31,7 +32,9 @@ export function AppShell({ activePath, children, onNavigate }: { activePath: str
   // no separate hamburger/drawer/scrim needed, and no dead-end state where
   // nothing on screen can bring navigation back.
   const collapsed = collapsedPref || isMobile;
-  const activeItem = navItems.find((item) => item.href === activePath);
+  const permissions = useCurrentUser().data?.data?.permissions ?? [];
+  const visibleNavItems = navItems.filter((item) => !("permission" in item) || permissions.includes(item.permission));
+  const activeItem = visibleNavItems.find((item) => item.href === activePath);
 
   useEffect(() => {
     localStorage.setItem(COLLAPSED_KEY, String(collapsedPref));
@@ -55,7 +58,7 @@ export function AppShell({ activePath, children, onNavigate }: { activePath: str
           </button>
         </div>
         <nav>
-          {navItems.map((item) => (
+          {visibleNavItems.map((item) => (
             <a
               key={item.href}
               href={item.href}

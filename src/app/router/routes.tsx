@@ -6,10 +6,16 @@ import { ErrorPage } from "../../features/auth/ErrorPage";
 import { LoginPage } from "../../features/auth/LoginPage";
 import { NotFoundPage } from "../../features/auth/NotFoundPage";
 import { ProfilePage } from "../../features/profile/ProfilePage";
+import { ActivatePage } from "../../features/registration/ActivatePage";
+import { MyRegistrationPage } from "../../features/registration/MyRegistrationPage";
+import { OrganizerConsolePage } from "../../features/registration/OrganizerConsolePage";
+import { RegisterPage } from "../../features/registration/RegisterPage";
 
 const protectedRoutes = {
   "/": ProfilePage,
-  "/error": ErrorPage
+  "/error": ErrorPage,
+  "/my-registration": MyRegistrationPage,
+  "/organizer": OrganizerConsolePage
 };
 
 export function AppRouter() {
@@ -40,7 +46,24 @@ export function AppRouter() {
     const returnTo = new URLSearchParams(search).get("returnTo") || undefined;
     return (
       <RedirectIfAuthenticated onNavigate={navigate}>
-        <LoginPage returnTo={returnTo} />
+        <LoginPage onNavigate={navigate} returnTo={returnTo} />
+      </RedirectIfAuthenticated>
+    );
+  }
+
+  if (path === "/register") {
+    return (
+      <RedirectIfAuthenticated onNavigate={navigate}>
+        <RegisterPage onNavigate={navigate} />
+      </RedirectIfAuthenticated>
+    );
+  }
+
+  if (path === "/activate") {
+    const code = new URLSearchParams(search).get("code") || undefined;
+    return (
+      <RedirectIfAuthenticated onNavigate={navigate}>
+        <ActivatePage code={code} onNavigate={navigate} />
       </RedirectIfAuthenticated>
     );
   }
