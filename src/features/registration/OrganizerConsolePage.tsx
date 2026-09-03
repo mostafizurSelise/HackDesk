@@ -7,6 +7,7 @@ import { Alert } from "../../shared/ui/Alert";
 import { ActionButton } from "../../shared/ui/ActionButton";
 import { DataTable, type Column } from "../../shared/ui/DataTable";
 import { LoadingScreen } from "../../shared/ui/LoadingScreen";
+import { LogoThumbnail } from "../../shared/ui/LogoThumbnail";
 import { PageHeader } from "../../shared/ui/PageHeader";
 import { StatusPill } from "../../shared/ui/StatusPill";
 import { listRegistrations, setRegistrationStatus, type Registration } from "./registrationApi";
@@ -44,6 +45,7 @@ export function OrganizerConsolePage() {
   if (registrationsQuery.isLoading) return <LoadingScreen />;
 
   const columns: Column<Registration>[] = [
+    { header: t("organizer.colLogo"), key: "logo", render: (row) => <LogoThumbnail fileId={row.LogoFileId} /> },
     { header: t("organizer.colTeam"), key: "team", render: (row) => row.TeamName },
     { header: t("organizer.colName"), key: "name", render: (row) => row.FullName },
     { header: t("organizer.colEmail"), key: "email", render: (row) => row.Email },

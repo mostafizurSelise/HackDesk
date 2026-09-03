@@ -1,10 +1,11 @@
-import { Image, Save } from "lucide-react";
+import { Save } from "lucide-react";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useT } from "../../lib/i18n/LocalizationProvider";
 import { Alert } from "../../shared/ui/Alert";
 import { FormField } from "../../shared/ui/FormField";
 import { LoadingScreen } from "../../shared/ui/LoadingScreen";
+import { LogoThumbnail } from "../../shared/ui/LogoThumbnail";
 import { PageHeader } from "../../shared/ui/PageHeader";
 import { SelectField } from "../../shared/ui/SelectField";
 import { StatusPill } from "../../shared/ui/StatusPill";
@@ -123,7 +124,7 @@ export function MyRegistrationPage() {
           <input type="file" accept="image/*" onChange={handleLogoChange} disabled={logoUploading} />
         </label>
         {logoError ? <Alert tone="error">{logoError}</Alert> : null}
-        {form.LogoFileId ? <span className="chip"><Image size={14} /> {t("myRegistration.logoUploaded")}</span> : null}
+        {form.LogoFileId ? <LogoThumbnail fileId={form.LogoFileId} size={64} /> : null}
 
         <button className="primary-button" type="submit" disabled={saveMutation.isPending || logoUploading}>
           <Save size={16} /> {saveMutation.isPending ? t("myRegistration.saving") : t("myRegistration.save")}

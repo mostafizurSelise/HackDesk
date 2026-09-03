@@ -23,3 +23,11 @@ export async function uploadLogo(file: File): Promise<string> {
 
   return presign.fileId;
 }
+
+// Requires blocks-data::file::get-file on the caller's role -- granted to
+// both participant (their own logo) and organizer (every team's logo).
+export async function getLogoUrl(fileId: string): Promise<string> {
+  const file = (await blocksClient.data.files.get(fileId)) as { url?: string };
+  if (!file?.url) throw new Error("Logo could not be loaded.");
+  return file.url;
+}
