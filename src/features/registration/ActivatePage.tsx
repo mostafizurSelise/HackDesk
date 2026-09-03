@@ -15,7 +15,6 @@ export function ActivatePage({ code, onNavigate }: { code: string | undefined; o
   const [confirmPassword, setConfirmPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | undefined>();
-  const [resent, setResent] = useState(false);
   const [done, setDone] = useState(false);
 
   useEffect(() => {
@@ -28,16 +27,6 @@ export function ActivatePage({ code, onNavigate }: { code: string | undefined; o
       () => setValidity("invalid")
     );
   }, [code]);
-
-  async function handleResend() {
-    if (!code) return;
-    try {
-      await blocksClient.auth.resendActivation({ code });
-      setResent(true);
-    } catch {
-      // Silently ignored -- resend is best-effort; the user can retry.
-    }
-  }
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -71,12 +60,7 @@ export function ActivatePage({ code, onNavigate }: { code: string | undefined; o
         <div className="auth-card">
           <div className="auth-brand"><span className="brand-mark"><ShieldCheck size={18} /></span><span>{t("activate.expiredTitle")}</span></div>
           <Alert tone="error">{t("activate.expiredBody")}</Alert>
-          {resent ? (
-            <Alert tone="info">{t("activate.resent")}</Alert>
-          ) : (
-            <button className="primary-button auth-submit" onClick={handleResend}>{t("activate.resend")}</button>
-          )}
-          <button className="icon-button auth-submit" onClick={() => onNavigate("/register")}>{t("activate.backToRegister")}</button>
+          <button className="primary-button auth-submit" onClick={() => onNavigate("/register")}>{t("activate.backToRegister")}</button>
         </div>
       </div>
     );

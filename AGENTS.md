@@ -135,3 +135,15 @@ Surface: **CLI** = terminal/admin, project-scoped · **SDK** = `@seliseblocks/cl
 - Dependencies: schema work must be reloaded before CRUD sees it; SSO implementation needs a registered OIDC client and HTTPS on the real domain to test.
 
 <!-- blocks-skills:end -->
+
+## HackDesk-specific platform notes
+
+Learned the hard way while building this project — not covered by the vendored skills above.
+
+**Built-in permissions are assignable to custom roles, and often must be.** The 180+ `blocks-iam::*`/`blocks-data::*`/etc. permissions seeded at project creation aren't reserved for system/admin roles — they gate real API endpoints (`[ProtectedEndPoint]` in the platform source) that *any* role's users may need to call. Before shipping a feature, trace every `blocksClient.*` call it makes to its real backend route and check whether that route requires a specific permission (an unauthenticated route needs none; a `[ProtectedEndPoint("resource")]` route needs that exact resource on the caller's role or direct grant). Getting this wrong doesn't show up until a non-admin user hits a silent 403 — the RLS/CLS policies on your own custom schemas are a completely separate mechanism (schema `security`/`policies`) and don't cover platform-service calls like file upload.
+
+Concretely for this app: `Registration` schema CRUD needs no IAM permission (governed entirely by its own RLS/CLS policies, see `blocks/data/rules.json`). But `data.files.presignedUploadUrl()` requires `blocks-data::file::get-pre-signed-url-for-upload`, which is NOT seeded on any custom role by default — only on the built-in `clouduser`/`cloudadmin`. Never default a public-signup role to `clouduser` to get around this — it carries ~178 permissions including manage-users, manage-roles, delete-project, and read-raw-secret-value. Instead create a narrow role (`participant`) holding only the specific built-in permission(s) your code actually calls, and set that as `defaultRolesForNewUser`.
+
+**`iam users access grant` and `iam signup-settings save` silently clobber fields you don't mention**, on this environment — not just "may not merge," genuinely resets the omitted field to empty/false. Always pass every field you want to keep in the *same* call (e.g. `--roles X --permissions Y` together, never as two separate calls), and re-read the record immediately after any write to this pair of endpoints to confirm nothing else moved.
+
+**`auth.resendActivation` requires an authenticated caller** (`[ProtectedEndPoint("blocks-iam::auth::resend-activation")]`), despite older skill-doc wording suggesting it "works either way." A visitor mid-activation has no session, so a self-service resend button can never succeed — no permission grant fixes that. The real shape (`ResendActivationRequest.UserId`, not a code) confirms it's meant for an authenticated admin/organizer to resend on someone else's behalf — build it as an organizer-console action keyed by the target's IAM user id, not a public button.

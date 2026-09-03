@@ -1,6 +1,7 @@
-import { Check, Clock3 } from "lucide-react";
+import { Check, Clock3, MailPlus } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useHasPermission } from "../access/usePermission";
+import { blocksClient } from "../../lib/blocks/client";
 import { useT } from "../../lib/i18n/LocalizationProvider";
 import { Alert } from "../../shared/ui/Alert";
 import { ActionButton } from "../../shared/ui/ActionButton";
@@ -21,6 +22,14 @@ export function OrganizerConsolePage() {
   const statusMutation = useMutation({
     mutationFn: ({ itemId, status }: { itemId: string; status: "approved" | "waitlisted" }) => setRegistrationStatus(itemId, status),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["registrations", "all"] })
+  });
+
+  // The registrant's activation link, not the organizer's own -- requires
+  // the organizer's blocks-iam::auth::resend-activation permission, keyed
+  // by the registrant's IAM user id (Registration.CreatedBy), not a code
+  // only the original recipient ever had.
+  const resendMutation = useMutation({
+    mutationFn: (userId: string) => blocksClient.auth.resendActivation({ userId })
   });
 
   if (!canReview) {
@@ -64,6 +73,13 @@ export function OrganizerConsolePage() {
             onClick={() => row.itemId && statusMutation.mutate({ itemId: row.itemId, status: "waitlisted" })}
             icon={<Clock3 size={16} />}
           />
+          <ActionButton
+            variant="icon"
+            title={t("organizer.resendActivation")}
+            disabled={resendMutation.isPending}
+            onClick={() => row.CreatedBy && resendMutation.mutate(row.CreatedBy)}
+            icon={<MailPlus size={16} />}
+          />
         </div>
       )
     }
@@ -75,6 +91,8 @@ export function OrganizerConsolePage() {
     <section>
       <PageHeader title={t("organizer.title")} subtitle={`${t("organizer.subtitle")} (${rows.length})`} />
       {statusMutation.isError ? <Alert tone="error">{(statusMutation.error as Error).message}</Alert> : null}
+      {resendMutation.isSuccess ? <Alert tone="info">{t("organizer.resendSent")}</Alert> : null}
+      {resendMutation.isError ? <Alert tone="error">{t("organizer.resendFailed")}</Alert> : null}
       {rows.length === 0 ? <Alert tone="info">{t("organizer.empty")}</Alert> : <DataTable columns={columns} rows={rows} />}
     </section>
   );

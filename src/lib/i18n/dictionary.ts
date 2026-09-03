@@ -49,9 +49,7 @@ export const defaultDictionary = {
   "activate.submitting": "Activating...",
   "activate.failed": "Activation failed",
   "activate.expiredTitle": "This link is no longer valid",
-  "activate.expiredBody": "Your activation link is missing, expired, or was already used.",
-  "activate.resend": "Send a new activation email",
-  "activate.resent": "A new activation email is on its way.",
+  "activate.expiredBody": "Your activation link is missing, expired, or was already used. Contact an organizer for a new one, or register again.",
   "activate.backToRegister": "Back to register",
   "activate.doneTitle": "Account activated",
   "activate.doneBody": "Your account is ready. Sign in to finish setting up your team.",
@@ -90,7 +88,10 @@ export const defaultDictionary = {
   "organizer.colStatus": "Status",
   "organizer.colActions": "Actions",
   "organizer.approve": "Approve",
-  "organizer.waitlist": "Waitlist"
+  "organizer.waitlist": "Waitlist",
+  "organizer.resendActivation": "Resend activation email",
+  "organizer.resendSent": "Activation email resent.",
+  "organizer.resendFailed": "Could not resend activation email."
 } as const;
 
 export type TranslationKey = keyof typeof defaultDictionary;
