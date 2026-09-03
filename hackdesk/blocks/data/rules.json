@@ -1,0 +1,148 @@
+{
+  "security": [
+    {
+      "schemaId": "3a29b1eb-2d64-4e94-b75e-b94ae25914fb",
+      "operation": 0,
+      "policyType": 0,
+      "fieldNames": [],
+      "accessLevel": 3
+    },
+    {
+      "schemaId": "3a29b1eb-2d64-4e94-b75e-b94ae25914fb",
+      "operation": 1,
+      "policyType": 0,
+      "fieldNames": [],
+      "accessLevel": 1
+    },
+    {
+      "schemaId": "3a29b1eb-2d64-4e94-b75e-b94ae25914fb",
+      "operation": 2,
+      "policyType": 0,
+      "fieldNames": [],
+      "accessLevel": 3
+    },
+    {
+      "schemaId": "3a29b1eb-2d64-4e94-b75e-b94ae25914fb",
+      "operation": 3,
+      "policyType": 0,
+      "fieldNames": [],
+      "accessLevel": 3
+    }
+  ],
+  "policies": [
+    {
+      "policyName": "read-own-or-organizer",
+      "policyDescription": "A signed-in user reads their own registration; organizers read all registrations.",
+      "policyType": 0,
+      "operation": 0,
+      "schemaName": "Registration",
+      "fieldNames": [],
+      "priority": 0,
+      "isAllowPolicy": true,
+      "ruleGroup": {
+        "logicalOperator": 1,
+        "rules": [
+          {
+            "leftSource": 1,
+            "leftOperand": "CreatedBy",
+            "operator": 0,
+            "rightSource": 0,
+            "rightOperand": "UserId",
+            "staticValue": null
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "organizer"
+          }
+        ],
+        "nestedGroups": []
+      }
+    },
+    {
+      "policyName": "edit-own-or-organizer",
+      "policyDescription": "A signed-in user edits their own registration; organizers edit all registrations.",
+      "policyType": 0,
+      "operation": 2,
+      "schemaName": "Registration",
+      "fieldNames": [],
+      "priority": 0,
+      "isAllowPolicy": true,
+      "ruleGroup": {
+        "logicalOperator": 1,
+        "rules": [
+          {
+            "leftSource": 1,
+            "leftOperand": "CreatedBy",
+            "operator": 0,
+            "rightSource": 0,
+            "rightOperand": "UserId",
+            "staticValue": null
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "organizer"
+          }
+        ],
+        "nestedGroups": []
+      }
+    },
+    {
+      "policyName": "status-organizer-only",
+      "policyDescription": "Only the organizer role may edit the Status field, regardless of who owns the row.",
+      "policyType": 1,
+      "operation": 2,
+      "schemaName": "Registration",
+      "fieldNames": [
+        "Status"
+      ],
+      "priority": 0,
+      "isAllowPolicy": true,
+      "ruleGroup": {
+        "logicalOperator": 0,
+        "rules": [
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "organizer"
+          }
+        ],
+        "nestedGroups": []
+      }
+    },
+    {
+      "policyName": "delete-organizer-only",
+      "policyDescription": "Only the organizer role may delete a registration.",
+      "policyType": 0,
+      "operation": 3,
+      "schemaName": "Registration",
+      "fieldNames": [],
+      "priority": 0,
+      "isAllowPolicy": true,
+      "ruleGroup": {
+        "logicalOperator": 0,
+        "rules": [
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "organizer"
+          }
+        ],
+        "nestedGroups": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "schemaName": "Registration",
+  "collectionName": "blx_Registrations",
+  "schemaType": 1,
+  "fields": [
+    {
+      "name": "FullName",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": true,
+      "isUniqueData": false,
+      "description": "The registrant's full name.",
+      "requiredOn": 1
+    },
+    {
+      "name": "Email",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": true,
+      "isUniqueData": true,
+      "description": "The registrant's email. Matches their IAM account email.",
+      "requiredOn": 1
+    },
+    {
+      "name": "TeamName",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false,
+      "description": "The team's display name.",
+      "requiredOn": 1
+    },
+    {
+      "name": "TeammateEmails",
+      "type": "String",
+      "isArray": true,
+      "isPIIData": true,
+      "isUniqueData": false,
+      "description": "Up to two teammate email addresses."
+    },
+    {
+      "name": "ExperienceLevel",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false,
+      "description": "One of: beginner, intermediate, advanced."
+    },
+    {
+      "name": "AiCli",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false,
+      "description": "One of: claude-code, codex, gemini-cli, other.",
+      "requiredOn": 1
+    },
+    {
+      "name": "GithubHandle",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false,
+      "description": "Optional GitHub username."
+    },
+    {
+      "name": "LogoFileId",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false,
+      "description": "Blocks Storage file id for the uploaded team logo, set by the upload flow."
+    },
+    {
+      "name": "Status",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false,
+      "description": "One of: submitted, approved, waitlisted. Organizer-only to change."
+    }
+  ]
+}
