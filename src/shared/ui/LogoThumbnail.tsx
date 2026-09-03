@@ -1,9 +1,11 @@
 import { ImageOff } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getLogoUrl } from "../../features/registration/uploadLogo";
+import { useT } from "../../lib/i18n/LocalizationProvider";
 import { Skeleton } from "./Skeleton";
 
 export function LogoThumbnail({ fileId, size = 40 }: { fileId?: string; size?: number }) {
+  const { t } = useT();
   const query = useQuery({
     enabled: Boolean(fileId),
     queryFn: () => getLogoUrl(fileId!),
@@ -16,7 +18,7 @@ export function LogoThumbnail({ fileId, size = 40 }: { fileId?: string; size?: n
 
   return (
     <img
-      alt="Team logo"
+      alt={t("common.teamLogoAlt")}
       src={query.data}
       style={{ borderRadius: 6, height: size, objectFit: "cover", width: size }}
     />
